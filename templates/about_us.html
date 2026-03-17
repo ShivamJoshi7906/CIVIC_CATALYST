@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - CivicCatalyst{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12">
+    <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-6">Building Smarter<br><span
+                class="gradient-text">Communities Together</span></h1>
+        <p class="text-xl text-slate-500 max-w-2xl mx-auto">
+            At CivicCatalyst, we believe every citizen has the power to shape their city. Our platform bridges the gap
+            between community members and local authorities.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-900 mb-6">Our Mission</h2>
+            <p class="text-slate-600 leading-relaxed mb-6">
+                Our mission is to empower citizens with technology that makes reporting civic issues simple,
+                transparent, and effective. We want to see a world where infrastructure problems are resolved before
+                they become safety hazards.
+            </p>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                        <i data-lucide="check" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-slate-700">Transparency in resolve process</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-slate-700">Community-driven development</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-medium text-slate-700">Real-time tracking and updates</span>
+                </div>
+            </div>
+        </div>
+        <div class="bg-blue-600 rounded-3xl p-8 text-white h-auto aspect-square flex flex-col justify-center">
+            <h3 class="text-5xl font-black mb-4">{{ resolved_display }}+</h3>
+            <p class="text-xl opacity-80 mb-8">Issues resolved through our platform.</p>
+            <div class="h-1 w-24 bg-white/20 mb-8"></div>
+            <p class="text-sm opacity-60">Join thousands of citizens making Gujarat a better place to live.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

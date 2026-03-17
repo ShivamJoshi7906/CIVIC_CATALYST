@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard - CivicCatalyst{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">My Dashboard</h1>
+            <p class="text-gray-500">Track the status of your reported issues.</p>
+        </div>
+        <a href="{% url 'report_issue' %}"
+            class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+            + Report New Issue
+        </a>
+    </div>
+    <!-- Profile Section -->
+    <div class="bg-white rounded-3xl p-8 shadow-xl border border-slate-100 transition duration-300 hover:shadow-2xl">
+        <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-10">
+            <!-- Profile Photo -->
+            <div class="relative group">
+                {% if user.profile_photo %}
+                <img src="{{ user.profile_photo.url }}"
+                    class="w-32 h-32 rounded-3xl object-cover ring-4 ring-blue-50 shadow-inner group-hover:scale-105 transition duration-500">
+                {% else %}
+                <div
+                    class="w-32 h-32 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-4xl font-black shadow-lg shadow-blue-200">
+                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+                </div>
+                {% endif %}
+                <div
+                    class="absolute -bottom-2 -right-2 bg-green-500 border-4 border-white w-6 h-6 rounded-full shadow-md">
+                </div>
+            </div>
+
+            <!-- User Details -->
+            <div class="flex-1 w-full text-center md:text-left">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-black text-slate-900 tracking-tight">{{ user.get_full_name|default:user.username }}</h2>
+                        <p class="text-slate-400 font-medium text-sm mt-1">Community Member Since {{ user.date_joined|date:"M Y" }}</p>
+                    </div>
+                    <span
+                        class="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-widest border border-blue-100">
+                        <i data-lucide="shield-check" class="w-3 h-3 mr-2"></i> {{ user.role }}
+                    </span>
+                </div>
+
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
+                    <div class="space-y-1">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 font-black">Email
+                            Address</span>
+                        <p class="text-slate-700 font-bold text-sm">{{ user.email|default:"Not provided" }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 font-black">Mobile
+                            Number</span>
+                        <p class="text-slate-700 font-bold text-sm">{{ user.phone|default:"Not provided" }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 font-black">Current Age</span>
+                        <p class="text-slate-700 font-bold text-sm">{{ user.age|default:"Not provided" }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 font-black">Account Role</span>
+                        <p class="text-slate-700 font-bold text-sm">{{ user.role|default:"User" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Issues -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                <tr>
+                    <th class="px-6 py-4">Title</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">Assigned To</th>
+                    <th class="px-6 py-4 text-right">Date Reported</th>
+                    <th class="px-6 py-4 text-right">ETA</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for issue in my_issues %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 font-medium text-gray-800">{{ issue.title|truncatechars:20 }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-[10px] font-bold 
+                            {% if issue.status == 'Pending' %}bg-yellow-100 text-yellow-800{% endif %}
+                            {% if issue.status == 'Completed' %}bg-green-100 text-green-800{% endif %}
+                            {% if issue.status == 'Assigned' %}bg-blue-100 text-blue-800{% endif %}">
+                            {{ issue.status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-gray-600 text-xs">
+                        {% if issue.assigned_to %}
+                        {{ issue.assigned_to.get_full_name|default:issue.assigned_to.email }}
+                        {% else %}
+                        <span class="text-gray-400">Not yet</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500 text-xs text-right">{{ issue.created_at|date:"M d, Y" }}</td>
+                    <td class="px-6 py-4 text-gray-500 text-sm text-right">
+                        {% if issue.estimated_completion %}
+                        {{ issue.estimated_completion|date:"M d, Y" }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-8 text-center text-gray-500">You haven't reported any
+                        issues yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

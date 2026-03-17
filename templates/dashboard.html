@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - CivicReports{% endblock %}
+
+{% block content %}
+<div class="space-y-10 py-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div class="space-y-1">
+            <h1 class="text-4xl font-black text-slate-900 tracking-tight">Dashboard Overview</h1>
+            <p class="text-slate-500 font-medium">Welcome back, <span class="text-blue-600 font-black cursor-default">{{
+                    user.username|default:"Citizen" }}</span></p>
+        </div>
+        <a href="{% url 'report_issue' %}"
+            class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-slate-800 transition shadow-2xl shadow-slate-200 transform hover:-translate-y-1 active:scale-95 flex items-center">
+            <i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i> Report New Issue
+        </a>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div
+            class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center text-center group hover:border-blue-200 transition duration-300">
+            <div
+                class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+                <i data-lucide="file-text" class="w-7 h-7"></i>
+            </div>
+            <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Total Reports</h3>
+            <p class="text-4xl font-black text-slate-900 mt-2">{{ total_issues|default:"0" }}</p>
+        </div>
+        <div
+            class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center text-center group hover:border-yellow-200 transition duration-300 border-b-4 border-yellow-400">
+            <div
+                class="w-14 h-14 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+                <i data-lucide="clock" class="w-7 h-7"></i>
+            </div>
+            <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Pending</h3>
+            <p class="text-4xl font-black text-slate-900 mt-2">{{ pending_issues|default:"0" }}</p>
+        </div>
+        <div
+            class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex flex-col items-center text-center group hover:border-green-200 transition duration-300 border-b-4 border-green-400">
+            <div
+                class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+                <i data-lucide="check-circle" class="w-7 h-7"></i>
+            </div>
+            <h3 class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Resolved</h3>
+            <p class="text-4xl font-black text-slate-900 mt-2">{{ resolved_issues|default:"0" }}</p>
+        </div>
+    </div>
+
+    <!-- Activity Section -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+        <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <h3 class="text-xl font-black text-slate-900 tracking-tight">Recent Activity</h3>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Updates</span>
+        </div>
+        <div class="p-12 text-center space-y-4">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-200">
+                <i data-lucide="activity" class="w-10 h-10"></i>
+            </div>
+            <p class="text-slate-400 font-bold italic">No recent activity found. Start by reporting an issue!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

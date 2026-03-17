@@ -1,0 +1,758 @@
+/* ===============================
+   RESET & BASE
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f6f8fc;
+    color: #1f2937;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===============================
+   HEADER (ALL PAGES)
+================================ */
+header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+header table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+header td {
+    vertical-align: middle;
+    padding: 0 6px;
+}
+
+header td:first-child {
+    text-align: left;
+    width: 25%;
+}
+
+header td[align="right"],
+header td.header-right {
+    text-align: right;
+    width: 75%;
+}
+
+header h2 {
+    font-size: 18px;
+    color: #2563eb;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+header p {
+    font-size: 11px;
+    color: #6b7280;
+    margin: 2px 0 0 0;
+    line-height: 1.2;
+}
+
+header nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 0px;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+header nav a:hover {
+    color: #2563eb;
+    background-color: #eff6ff;
+}
+
+/* Language selector (small, header only) */
+header form {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #d1d5db;
+    white-space: nowrap;
+}
+
+header .lang-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #d1d5db;
+}
+
+header label {
+    font-size: 11px;
+    color: #374151;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
+}
+
+header select {
+    padding: 3px 6px;
+    font-size: 11px;
+    height: 24px;
+    border-radius: 3px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: auto;
+    min-width: 70px;
+    max-width: 120px;
+}
+
+header select:hover {
+    border-color: #2563eb;
+}
+
+header select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* ===============================
+   PAGE TITLES
+================================ */
+h1, h2, h3 {
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 26px;
+    margin-top: 30px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+p {
+    color: #6b7280;
+}
+
+/* ===============================
+   MAIN / SECTION
+================================ */
+main, section {
+    padding: 40px 20px;
+    text-align: center;
+    flex: 1;
+}
+
+main {
+    margin-top: 20px;
+}
+
+/* ===============================
+   AUTH CONTAINER (LOGIN/SIGNUP)
+================================ */
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 40px 20px;
+}
+
+.auth-form {
+    width: 100%;
+}
+
+.auth-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.auth-links a {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ===============================
+   FORMS (LOGIN, SIGNUP, REPORT)
+================================ */
+form {
+    background: #ffffff;
+    max-width: 480px;
+    margin: 30px auto;
+    padding: 32px;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    text-align: left;
+}
+
+form label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    display: block;
+    margin-bottom: 8px;
+}
+
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+form input::placeholder,
+form textarea::placeholder {
+    color: #9ca3af;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Buttons */
+input[type="submit"],
+input[type="reset"],
+button {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+input[type="submit"]:active,
+input[type="reset"]:active,
+button:active {
+    transform: translateY(0);
+}
+
+/* Button spacing when multiple */
+input[type="submit"] + input[type="reset"],
+input[type="reset"] + input[type="submit"] {
+    margin-top: -8px;
+    width: calc(50% - 4px);
+    display: inline-block;
+}
+
+/* ===============================
+   Wider forms for specific pages
+================================ */
+.wide-form {
+    max-width: 760px; /* wider form */
+    margin: 30px auto;
+}
+
+@media (max-width: 768px) {
+    .wide-form {
+        max-width: calc(100% - 24px);
+        margin: 12px auto;
+    }
+}
+
+/* ===============================
+   TABLES (DASHBOARD, HOME)
+================================ */
+table {
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    max-width: 100%;
+    width: auto;
+}
+
+table[width="100%"] {
+    width: 100%;
+}
+
+table[border="1"] {
+    border: 1px solid #d1d5db;
+}
+
+th {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 2px solid #1d4ed8;
+}
+
+td {
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #f3f4f6;
+    transition: background 0.2s ease;
+}
+
+/* Stats table styling */
+table td strong {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Status badges in tables */
+td:contains("Resolved") {
+    color: #059669;
+    font-weight: 500;
+}
+
+td:contains("In Progress") {
+    color: #d97706;
+    font-weight: 500;
+}
+
+td:contains("Pending") {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+/* ===============================
+   LINKS
+================================ */
+a {
+    color: #2563eb;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Back to home / action links */
+div a,
+section a {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #2563eb;
+    color: #ffffff;
+    border-radius: 8px;
+    margin: 10px 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+div a:hover,
+section a:hover {
+    background: #1d4ed8;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* ===============================
+   MAP
+================================ */
+iframe {
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    border: none;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
+    margin: 20px auto;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    padding: 20px;
+    margin-top: auto;
+    text-align: center;
+}
+
+footer p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+footer hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 10px 0;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 20px 0;
+}
+
+/* Horizontal dividers */
+header hr,
+section hr {
+    background: transparent;
+}
+
+/* Align helper classes */
+[align="center"] {
+    text-align: center;
+}
+
+[align="right"] {
+    text-align: right;
+}
+
+/* Table width utilities */
+table[width="100%"] {
+    width: 100%;
+}
+
+table[width="80%"] {
+    width: 80%;
+}
+
+table[width="95%"] {
+    width: 95%;
+}
+
+/* Cellpadding and cellspacing alternatives */
+table[cellpadding] {
+    border-collapse: collapse;
+}
+
+table[cellspacing="0"] {
+    border-collapse: collapse;
+}
+
+/* Inline form styling */
+form[style*="display:inline"] {
+    display: inline-block;
+}
+
+/* File input styling */
+input[type="file"] {
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Radio and checkbox styling */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+}
+
+input[type="radio"] + *,
+input[type="checkbox"] + * {
+    vertical-align: middle;
+}
+
+/* Paragraph styling in forms */
+form p {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+form p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 8px 12px;
+    }
+
+    header table {
+        display: block;
+    }
+
+    header table tr {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    header table td {
+        width: 100%;
+        padding: 4px 0;
+    }
+
+    header table td:first-child {
+        text-align: left;
+        width: 100%;
+    }
+
+    header table td[align="right"],
+    header table td.header-right {
+        text-align: left;
+        width: 100%;
+    }
+
+    header h2 {
+        font-size: 16px;
+    }
+
+    header p {
+        font-size: 10px;
+    }
+
+    header nav a {
+        display: inline-block;
+        font-size: 11px;
+        padding: 3px 6px;
+        margin: 0 3px;
+    }
+
+    header form {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        margin-top: 6px;
+        gap: 3px;
+    }
+
+    header .lang-form {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        margin-top: 4px;
+        gap: 3px;
+    }
+
+    header label {
+        font-size: 10px;
+    }
+
+    header select {
+        font-size: 10px;
+        height: 22px;
+        padding: 2px 4px;
+    }
+
+    form {
+        padding: 18px;
+        margin: 12px 8px;
+        max-width: calc(100% - 16px);
+    }
+
+    table {
+        width: 95%;
+        font-size: 12px;
+    }
+
+    table td,
+    table th {
+        padding: 8px 6px;
+    }
+
+    main, section {
+        padding: 12px 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+    iframe {
+        max-width: 95vw !important;
+        height: 250px !important;
+    }
+
+    .auth-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+/* ===============================
+   HEADER LANGUAGE SELECT (SMALL)
+================================ */
+header .lang-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid #e5e7eb;
+}
+
+/* Prevent form styles from affecting header */
+header .lang-form form {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Small dropdown */
+header .lang-form select {
+    width: auto;
+    min-width: 70px;
+    max-width: 140px;
+    padding: 6px 8px;
+    font-size: 12px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+/* Small label */
+header .lang-form label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ===============================
+   UTILITY CLASSES
+================================ */
+.site-header {
+    /* For semantic header */
+}
+
+.header-table {
+    width: 100%;
+}
+
+.header-left {
+    text-align: left;
+}
+
+.header-right {
+    text-align: right;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #dc2626;
+}
+
+.success-message {
+    background: #dcfce7;
+    color: #166534;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #16a34a;
+}
+
+.warning-message {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f59e0b;
+}

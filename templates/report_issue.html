@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Report Issue - CivicCatalyst{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-12 px-4">
+    <div class="text-center mb-12 space-y-2">
+        <span
+            class="bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border border-blue-100">📌
+            Community Action</span>
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight mt-4">Report a Civic Issue</h1>
+        <p class="text-slate-500 font-medium">Help your city improve. Every report makes a difference.</p>
+    </div>
+
+    <div class="bg-white rounded-3xl p-10 shadow-2xl border border-slate-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+        <form method="post" enctype="multipart/form-data" class="space-y-8">
+            {% csrf_token %}
+
+            <!-- Title & Category -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Issue Title</label>
+                    <input type="text" name="title"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition"
+                        placeholder="e.g. Pothole on Main St">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Category</label>
+                    <select name="category"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition">
+                        <option value="Road">Roads & Maintenance</option>
+                        <option value="Electricity">Electricity & Power</option>
+                        <option value="Water">Water Supply & Sewage</option>
+                        <option value="Garbage">Garbage & Sanitation</option>
+                        <option value="Traffic">Traffic & Transport</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Description with Mic -->
+            <div class="space-y-2">
+                <label
+                    class="text-[10px] font-black uppercase tracking-widest text-slate-400 block ml-1">Description</label>
+                <div class="relative">
+                    <textarea id="description" name="description" rows="5"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 pr-14 text-slate-800 font-medium text-sm placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition resize-none"
+                        placeholder="Describe the issue in detail — what, where, and how severe..."></textarea>
+                    <button type="button" id="micBtn"
+                        class="absolute top-4 right-4 text-slate-400 hover:text-blue-600 transition p-2 rounded-xl hover:bg-white hover:shadow-md"
+                        title="Voice to Text">
+                        <i data-lucide="mic" class="w-5 h-5"></i>
+                    </button>
+                    <span id="listeningIndicator" class="hidden absolute top-4 right-14 flex h-3 w-3">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                </div>
+                <p class="text-[10px] text-slate-400 ml-1 font-medium">🎙️ Click the microphone to dictate your
+                    description.</p>
+            </div>
+
+            <!-- Location -->
+            <div class="space-y-2">
+                <label
+                    class="text-[10px] font-black uppercase tracking-widest text-slate-400 block ml-1">Location</label>
+                <div class="flex gap-3">
+                    <input type="text" id="location" name="location"
+                        class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-800 font-bold text-sm placeholder:text-slate-300 placeholder:font-normal focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition"
+                        placeholder="Enter address or use GPS location">
+                    <button type="button" onclick="getLocation()"
+                        class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100 flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                        <span class="text-xs hidden sm:inline">GPS</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 block ml-1">Upload
+                    Evidence Photo</label>
+                <div class="flex justify-center px-6 pt-8 pb-8 border-2 border-slate-200 border-dashed rounded-2xl hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-300 cursor-pointer group"
+                    onclick="document.getElementById('imageInput').click()">
+                    <div class="space-y-3 text-center">
+                        <img id="imagePreview" class="mx-auto h-48 object-contain hidden mb-4 rounded-2xl shadow-lg" />
+                        <div id="uploadPlaceholder">
+                            <div
+                                class="w-16 h-16 bg-slate-100 group-hover:bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 transition">
+                                <i data-lucide="upload-cloud"
+                                    class="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition"></i>
+                            </div>
+                            <p class="font-black text-slate-700 text-sm">Click to upload or drag &amp; drop</p>
+                            <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-bold">PNG, JPG, GIF
+                                · Max 10MB</p>
+                        </div>
+                    </div>
+                </div>
+                <input id="imageInput" name="image" type="file" class="hidden" accept="image/*"
+                    onchange="previewImage(this)">
+            </div>
+
+            <div class="pt-4">
+                <button type="submit"
+                    class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl hover:bg-slate-800 transition shadow-2xl shadow-slate-200 transform hover:-translate-y-1 active:scale-95 text-lg flex items-center justify-center gap-3">
+                    <i data-lucide="send" class="w-5 h-5"></i> Submit Report
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Voice to Text Logic
+    const micBtn = document.getElementById('micBtn');
+    const descriptionArea = document.getElementById('description');
+    const listeningIndicator = document.getElementById('listeningIndicator');
+
+    if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = function () {
+            listeningIndicator.classList.remove('hidden');
+            micBtn.classList.add('text-red-500');
+        };
+
+        recognition.onend = function () {
+            listeningIndicator.classList.add('hidden');
+            micBtn.classList.remove('text-red-500');
+        };
+
+        recognition.onresult = function (event) {
+            const transcript = event.results[0][0].transcript;
+            descriptionArea.value += (descriptionArea.value ? ' ' : '') + transcript;
+        };
+
+        micBtn.addEventListener('click', () => {
+            recognition.start();
+        });
+    } else {
+        micBtn.style.display = 'none'; // Hide if not supported
+        console.log("Web Speech API not supported");
+    }
+
+    // Geolocation Logic
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showPosition(position) {
+        document.getElementById("location").value = "Lat: " + position.coords.latitude + ", Long: " + position.coords.longitude;
+    }
+
+    // Image Preview Logic
+    function previewImage(input) {
+        const preview = document.getElementById('imagePreview');
+        const placeholder = document.getElementById('uploadPlaceholder');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+
+            reader.onerror = function () {
+                console.error("Error reading file");
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

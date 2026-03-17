@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}View Map | Civic Catalyst{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+    <div>
+      <h1 class="text-4xl font-black text-slate-900 tracking-tight">Issue Map</h1>
+      <p class="text-slate-500 font-medium mt-1">Visualizing community reports across the region.</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="{% url 'dashboard' %}"
+        class="text-slate-500 font-bold text-sm bg-white px-6 py-4 rounded-2xl border border-slate-200 hover:bg-slate-50 transition shadow-sm">
+        Dashboard
+      </a>
+      <a href="{% url 'report_issue' %}"
+        class="bg-blue-600 text-white px-6 py-4 rounded-2xl font-black hover:bg-blue-700 transition shadow-2xl shadow-blue-200 flex items-center gap-2">
+        <i data-lucide="plus-circle" class="w-5 h-5"></i>
+        <span>Report Issue</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-3xl p-4 shadow-2xl border border-slate-100 overflow-hidden relative">
+    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 z-[1000]"></div>
+    <div id="map" class="w-full h-[700px] rounded-2xl overflow-hidden shadow-inner border border-slate-100 z-0"></div>
+  </div>
+</div>
+
+<script>
+  function initMap() {
+    // Center of Gujarat or a default location
+    const defaultCenter = [23.0225, 72.5714];
+    const map = L.map('map').setView(defaultCenter, 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Custom Icons based on status
+    const getIcon = (status) => {
+      let color = '#eab308'; // yellow
+      if (status === 'Completed') color = '#22c55e'; // green
+      if (status === 'Assigned') color = '#3b82f6'; // blue
+      if (status === 'In Progress') color = '#a855f7'; // purple
+
+      // Simplified SVG icon for Leaflet
+      const svgIcon = `
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21.7C12 21.7 4 14 4 9C4 4.58172 7.58172 1 12 1C16.4183 1 20 4.58172 20 9C20 14 12 21.7 12 21.7Z" fill="${color}" stroke="white" stroke-width="2"/>
+          <circle cx="12" cy="9" r="3" fill="white"/>
+        </svg>
+      `;
+
+      return L.divIcon({
+        className: 'custom-marker',
+        html: svgIcon,
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30]
+      });
+    };
+
+    // Fetch issues JSON
+    fetch('{% url "issues_json" %}')
+      .then(response => response.json())
+      .then(data => {
+        const markers = [];
+        data.forEach(issue => {
+          // If no lat/lng, use random scattering around default center for demo purposes
+          // In a real app, these should always be valid
+          let lat = parseFloat(issue.latitude) || (defaultCenter[0] + (Math.random() - 0.5) * 0.1);
+          let lng = parseFloat(issue.longitude) || (defaultCenter[1] + (Math.random() - 0.5) * 0.1);
+
+          let statusColor = '#eab308'; // yellow
+          if (issue.status === 'Completed') statusColor = '#22c55e'; // green
+          if (issue.status === 'Assigned') statusColor = '#3b82f6'; // blue
+          if (issue.status === 'In Progress') statusColor = '#a855f7'; // purple
+
+          const marker = L.marker([lat, lng], { icon: getIcon(issue.status) }).addTo(map);
+
+          const popupContent = `
+            <div class="p-4 min-w-[250px] font-sans">
+              <h3 class="font-black text-slate-900 text-lg mb-2">${issue.title}</h3>
+              <div class="flex items-center space-x-2 mb-3">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider" style="background-color: ${statusColor}15; color: ${statusColor}; border: 1px solid ${statusColor}30">
+                      ${issue.status}
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${issue.category}</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-4 leading-relaxed">${issue.description}</p>
+              <div class="flex items-center text-[10px] text-slate-400 mb-4 font-semibold italic">
+                  Reported by ${issue.reported_by}
+              </div>
+              <a href="/update-status/${issue.id}/" class="w-full bg-slate-900 text-white py-2 rounded-xl text-center font-bold text-xs hover:bg-slate-800 transition block">
+                View Details &rarr;
+              </a>
+            </div>
+          `;
+
+          marker.bindPopup(popupContent, {
+            maxWidth: 300,
+            className: 'custom-popup'
+          });
+
+          markers.push(marker);
+        });
+
+        // Fit map to markers if any exist
+        if (markers.length > 0) {
+          const group = new L.featureGroup(markers);
+          map.fitBounds(group.getBounds().pad(0.1));
+        }
+      })
+      .catch(err => console.error('Error fetching issues:', err));
+  }
+
+  document.addEventListener('DOMContentLoaded', initMap);
+</script>
+
+<style>
+  .leaflet-popup-content-wrapper {
+    border-radius: 20px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .leaflet-popup-content {
+    margin: 0 !important;
+    width: auto !important;
+  }
+
+  .leaflet-popup-tip-container {
+    display: none !important;
+  }
+
+  .custom-marker {
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+  }
+</style>
+{% endblock %}

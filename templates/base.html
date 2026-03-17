@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}CivicCatalyst - Modern Issue Reporting{% endblock %}
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Leaflet Maps -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        /* Slate-50 */
+      }
+
+      .glass-nav {
+        background: rgba(31, 41, 55, 0.7);
+        /* translucent dark */
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+
+  <body class="text-slate-800 flex flex-col min-h-screen">
+    <!-- Navigation -->
+    <nav
+      id="main-navbar"
+      class="fixed w-full z-50 pt-6 transition-all duration-500 ease-in-out transform"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="glass-nav rounded-full px-4 sm:px-10 py-3 grid grid-cols-3 items-center shadow-2xl relative"
+        >
+          <!-- Left Section: Navigation Links -->
+          <div class="flex items-center space-x-2 sm:space-x-8">
+            <a
+              href="{% url 'home' %}"
+              class="text-xs sm:text-sm font-semibold text-gray-300 hover:text-white transition whitespace-nowrap"
+              >Home</a
+            >
+            <a
+              href="{% url 'issue_list' %}"
+              class="text-xs sm:text-sm font-semibold text-gray-300 hover:text-white transition whitespace-nowrap"
+              >Issues</a
+            >
+            <a
+              href="{% url 'view_map' %}"
+              class="text-xs sm:text-sm font-semibold text-gray-300 hover:text-white transition whitespace-nowrap"
+              >Maps</a
+            >
+            <a
+              href="{% url 'about_us' %}"
+              class="hidden md:block text-xs sm:text-sm font-semibold text-gray-300 hover:text-white transition whitespace-nowrap"
+              >About Us</a
+            >
+          </div>
+
+          <!-- Logo: Absolute Center -->
+          <div class="flex justify-center">
+            <a href="{% url 'home' %}" class="flex flex-col items-center group">
+              <span
+                class="text-base sm:text-xl font-black text-white tracking-widest leading-none"
+                >CivicCatalyst</span
+              >
+              <span
+                class="text-[6px] sm:text-[8px] text-gray-400 uppercase tracking-[0.2em] mt-1"
+                >SPOT.REPORT.RESOLVE</span
+              >
+            </a>
+          </div>
+
+          <!-- Right Section: Actions & Profile -->
+          <div class="flex items-center justify-end space-x-2 sm:space-x-6">
+            <!-- Translate Icon & Popup -->
+            <div class="relative">
+              <button
+                id="translate-btn"
+                class="text-gray-300 hover:text-white transition p-1.5 rounded-full hover:bg-white/10 flex items-center justify-center"
+              >
+                <i data-lucide="languages" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+              </button>
+              <!-- Popup -->
+              <div
+                id="translate-popup"
+                class="absolute right-0 mt-3 w-40 bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden opacity-0 invisible translate-y-2 transition-all duration-200 z-[60]"
+              >
+                <div class="py-2">
+                  <button
+                    onclick="translateSite('en')"
+                    class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/10 transition font-medium"
+                  >
+                    English
+                  </button>
+                  <button
+                    onclick="translateSite('hi')"
+                    class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/10 transition font-medium"
+                  >
+                    Hindi
+                  </button>
+                  <button
+                    onclick="translateSite('gu')"
+                    class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/10 transition font-medium"
+                  >
+                    Gujarati
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="flex items-center space-x-3 sm:space-x-6">
+              <a
+                href="{% url 'dashboard' %}"
+                class="hidden sm:block text-sm font-semibold text-gray-300 hover:text-white transition"
+                >Dashboard</a
+              >
+
+              <!-- User Dropdown -->
+              <div class="relative group">
+                <button
+                  class="flex items-center space-x-1 text-sm font-semibold text-gray-300 hover:text-white transition"
+                >
+                  <span class="hidden md:inline"
+                    >{{ user.get_full_name|default:user.username }}</span
+                  >
+                  <i data-lucide="user" class="w-4 h-4 md:hidden"></i>
+                  <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                </button>
+                <div
+                  class="absolute right-0 mt-3 w-48 bg-gray-900 rounded-xl shadow-xl border border-white/10 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200"
+                >
+                  <div class="py-2">
+                    <a
+                      href="{% url 'dashboard' %}"
+                      class="block sm:hidden px-4 py-2 text-sm text-gray-300 hover:bg-white/5"
+                      >Dashboard</a
+                    >
+                    <form action="{% url 'logout' %}" method="post">
+                      {% csrf_token %}
+                      <button
+                        type="submit"
+                        class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition font-bold"
+                      >
+                        Sign Out
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href="{% url 'report_issue' %}"
+                class="bg-blue-600 text-white px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-500/40"
+                >Report</a
+              >
+            </div>
+            {% else %}
+            <div class="flex items-center space-x-3 sm:space-x-6">
+              <a
+                href="{% url 'login' %}"
+                class="text-xs sm:text-sm font-semibold text-gray-300 hover:text-white transition"
+                >Login</a
+              >
+              <a
+                href="{% url 'signup' %}"
+                class="bg-blue-600 text-white px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-500/40"
+                >Register</a
+              >
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main
+      class="flex-grow pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full"
+    >
+      {% if messages %} {% for message in messages %}
+      <div
+        class="mb-6 p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700 border border-green-200{% else %}bg-red-100 text-red-700 border border-red-200{% endif %}"
+      >
+        {{ message }}
+      </div>
+      {% endfor %} {% endif %} {% block content %} {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          <div class="col-span-1 md:col-span-1">
+            <div class="flex items-center space-x-2 mb-6">
+              <div
+                class="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold"
+              >
+                C
+              </div>
+              <span class="text-xl font-bold text-slate-900"
+                >CivicCatalyst</span
+              >
+            </div>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Empowering citizens to build better communities through
+              transparent issue reporting and efficient resolution tracking.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 mb-6">Quick Links</h4>
+            <ul class="space-y-3 text-sm text-slate-500">
+              <li>
+                <a
+                  href="{% url 'about_us' %}"
+                  class="hover:text-blue-600 transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'home' %}#how-it-works"
+                  class="hover:text-blue-600 transition"
+                  >How it Works</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-blue-600 transition"
+                  >Success Stories</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-blue-600 transition"
+                  >Contact Support</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 mb-6">Legal</h4>
+            <ul class="space-y-3 text-sm text-slate-500">
+              <li>
+                <a href="#" class="hover:text-blue-600 transition"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-blue-600 transition"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-blue-600 transition"
+                  >Cookie Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 mb-6">Contact</h4>
+            <ul class="space-y-3 text-sm text-slate-500">
+              <li class="flex items-center space-x-2">
+                <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+                <span>support@civiccatalyst.com</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                <span>+91 999999999</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
+                <span>Gujarat</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-slate-400 text-sm">
+            © 2026 CivicCatalyst. All rights reserved.
+          </p>
+          <div class="flex space-x-4 mt-4 md:mt-0">
+            <a
+              href="https://www.instagram.com/shreya_adroja28?igsh=M3YzNjFvaHdrdTd4"
+              class="text-slate-400 hover:text-blue-600 transition"
+              ><i data-lucide="twitter" class="w-5 h-5"></i
+            ></a>
+            <a
+              href="https://www.instagram.com/dhruvi.1106?igsh=NWF6b28zem55NmFt"
+              class="text-slate-400 hover:text-blue-600 transition"
+              ><i data-lucide="facebook" class="w-5 h-5"></i
+            ></a>
+            <a
+              href="https://www.instagram.com/shivamjoshi7906?igsh=MTNuN2I3Y3J4OG9x"
+              class="text-slate-400 hover:text-blue-600 transition"
+              ><i data-lucide="instagram" class="w-5 h-5"></i
+            ></a>
+            <a
+              href="https://www.instagram.com/marshal_godhani?igsh=ZnBlaW0zazE1b3Nx"
+              class="text-slate-400 hover:text-blue-600 transition"
+              ><i data-lucide="linkedin" class="w-5 h-5"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Hidden Google Widget -->
+    <div id="google_translate_element" style="display: none !important"></div>
+
+    <script>
+      lucide.createIcons();
+
+      // Navbar Scroll Logic
+      let lastScrollTop = 0;
+      const navbar = document.getElementById("main-navbar");
+      window.addEventListener("scroll", function () {
+        let scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > lastScrollTop && scrollTop > 50) {
+          navbar.style.transform = "translateY(-150%)";
+          navbar.style.opacity = "0";
+        } else {
+          navbar.style.transform = "translateY(0)";
+          navbar.style.opacity = "1";
+        }
+        lastScrollTop = scrollTop;
+      });
+
+      // Translate Logic
+      const translateBtn = document.getElementById("translate-btn");
+      const translatePopup = document.getElementById("translate-popup");
+
+      translateBtn &&
+        translateBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          translatePopup.classList.toggle("invisible");
+          translatePopup.classList.toggle("opacity-0");
+          translatePopup.classList.toggle("translate-y-2");
+        });
+
+      document.addEventListener("click", (e) => {
+        if (
+          translatePopup &&
+          !translatePopup.contains(e.target) &&
+          !translateBtn.contains(e.target)
+        ) {
+          translatePopup.classList.add("invisible");
+          translatePopup.classList.add("opacity-0");
+          translatePopup.classList.add("translate-y-2");
+        }
+      });
+
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: "en,hi,gu",
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+          },
+          "google_translate_element",
+        );
+      }
+
+      function translateSite(langCode) {
+        const select = document.querySelector("select.goog-te-combo");
+        if (select) {
+          select.value = langCode;
+          select.dispatchEvent(new Event("change"));
+        } else {
+          console.warn("Google Translate combo not found, retrying...");
+          setTimeout(() => translateSite(langCode), 1000);
+        }
+        // Close popup
+        if (translatePopup) {
+          translatePopup.classList.add("invisible");
+          translatePopup.classList.add("opacity-0");
+        }
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+  </body>
+</html>

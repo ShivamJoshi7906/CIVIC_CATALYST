@@ -1,0 +1,54 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Civic Catalyst{% endblock %}</title>
+        {% block head %}{% tailwind_css %}{% endblock %}
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans leading-relaxed">
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div>
+                <a href="/" class="text-2xl font-semibold text-gray-800">Civic Catalyst</a>
+                <p class="text-sm text-gray-500">Empowering Citizens, Transforming Cities</p>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <nav class="space-x-4 hidden md:block">
+                    <a href="/" class="text-gray-700 hover:text-blue-600">Home</a>
+                    <a href="{% url 'report_issue' %}" class="text-gray-700 hover:text-blue-600">Report Issue</a>
+                    <a href="{% url 'view_map' %}" class="text-gray-700 hover:text-blue-600">View Map</a>
+                    <a href="{% url 'dashboard' %}" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                    <a href="{% url 'login' %}" class="text-gray-700 hover:text-blue-600">Login</a>
+                    <a href="{% url 'signup' %}" class="text-gray-700 hover:text-blue-600">Sign Up</a>
+                </nav>
+
+                <form class="flex items-center space-x-2">
+                    <label class="sr-only" for="language">Language</label>
+                    <select id="language" name="language" class="border rounded px-2 py-1 text-sm">
+                        <option value="en">EN</option>
+                        <option value="hi">HI</option>
+                        <option value="gu">GU</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-6 text-sm text-gray-600 text-center">
+            &copy; 2026 Civic Catalyst | Public Issue Reporting System
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="darkBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0052CC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#004499;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lightBlue" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#5DADE2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#85C1E2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="teal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#17A2B8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#20B2AA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="200" height="200" fill="#F5F5F5"/>
+  
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="95" fill="white" stroke="#D0D0D0" stroke-width="0.5"/>
+  
+  <!-- Light blue/cyan arc (bottom-left) -->
+  <path d="M 25 100 A 75 75 0 0 1 100 25" fill="none" stroke="url(#lightBlue)" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+  
+  <!-- Dark blue arc (top-right) -->
+  <path d="M 100 25 A 75 75 0 0 1 175 100" fill="none" stroke="url(#darkBlue)" stroke-width="16" stroke-linecap="round" opacity="0.95"/>
+  
+  <!-- Left hand/arm (light blue) -->
+  <g>
+    <!-- Arm -->
+    <path d="M 35 115 Q 20 110 15 100" fill="none" stroke="url(#lightBlue)" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+    <!-- Hand/fingers -->
+    <circle cx="12" cy="97" r="3.5" fill="url(#lightBlue)" opacity="0.8"/>
+    <circle cx="10" cy="103" r="3" fill="url(#lightBlue)" opacity="0.7"/>
+  </g>
+  
+  <!-- Right hand/arm (dark blue - pointing right) -->
+  <g>
+    <!-- Arm -->
+    <path d="M 165 85 Q 180 92 188 102" fill="none" stroke="url(#darkBlue)" stroke-width="9" stroke-linecap="round" opacity="0.95"/>
+    <!-- Hand with pointing gesture -->
+    <ellipse cx="180" cy="96" rx="5" ry="7" fill="url(#darkBlue)" opacity="0.9"/>
+    <!-- Pointing index finger -->
+    <path d="M 190 95 L 198 92 L 196 100 Z" fill="url(#darkBlue)" opacity="0.95"/>
+  </g>
+  
+  <!-- Center handshake/grip area -->
+  <ellipse cx="88" cy="105" rx="7" ry="11" fill="url(#darkBlue)" opacity="0.75" transform="rotate(-25 88 105)"/>
+  <ellipse cx="112" cy="95" rx="7" ry="11" fill="url(#lightBlue)" opacity="0.75" transform="rotate(25 112 95)"/>
+  
+  <!-- Additional grip details -->
+  <circle cx="100" cy="100" r="6" fill="url(#darkBlue)" opacity="0.6"/>
+  
+  <!-- Text paths -->
+  <defs>
+    <path id="topText" d="M 35 100 A 65 65 0 0 1 165 100" fill="none"/>
+    <path id="bottomText" d="M 165 100 A 65 65 0 0 1 35 100" fill="none"/>
+  </defs>
+  
+  <!-- Top text: CIVIC CATALYST -->
+  <text font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#0052CC" letter-spacing="1.5" font-style="normal">
+    <textPath href="#topText" startOffset="50%" text-anchor="middle">
+      CIVIC CATALYST
+    </textPath>
+  </text>
+  
+  <!-- Bottom text: SPOT. REPORT. RESOLVE. -->
+  <text font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="600" fill="#17A2B8" letter-spacing="0.8">
+    <textPath href="#bottomText" startOffset="50%" text-anchor="middle">
+      SPOT. REPORT. RESOLVE.
+    </textPath>
+  </text>
+</svg>

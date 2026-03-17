@@ -1,0 +1,159 @@
+{% extends 'base.html' %} {% block content %}
+<!-- Hero Section -->
+<section
+  class="relative bg-white overflow-hidden rounded-3xl shadow-xl mt-4 mx-4 md:mx-0"
+>
+  <div
+    class="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-50"
+  ></div>
+  <div
+    class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center text-center"
+  >
+    <span
+      class="bg-blue-100 text-blue-700 text-sm font-bold px-4 py-1.5 rounded-full mb-6 shadow-sm"
+    >
+      🚀 Empowering Communities
+    </span>
+    <h1
+      class="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6"
+    >
+      Make Your City <br />
+      <span class="gradient-text">Better, Together.</span>
+    </h1>
+    <p class="text-xl text-slate-500 max-w-2xl mb-10 leading-relaxed">
+      Report civic issues, track real-time progress, and collaborate with local
+      authorities to build a cleaner, safer, and smarter city.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <a
+        href="{% url 'report_issue' %}"
+        class="bg-blue-600 text-white px-8 py-3 rounded-xl text-base font-bold hover:bg-blue-700 transition shadow-sm transform hover:-translate-y-1"
+      >
+        Report an Issue
+      </a>
+      <a
+        href="{% url 'view_map' %}"
+        class="bg-white text-slate-700 border border-slate-200 px-8 py-3 rounded-xl text-base font-bold hover:bg-slate-50 hover:border-slate-300 transition shadow-sm transform hover:-translate-y-1"
+      >
+        View Community Map
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <div
+      class="text-center p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition"
+    >
+      <div class="text-4xl font-bold text-blue-600 mb-2">
+        {{ issues_reported }}+
+      </div>
+      <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">
+        Issues Reported
+      </div>
+    </div>
+    <div
+      class="text-center p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition"
+    >
+      <div class="text-4xl font-bold text-green-500 mb-2">
+        {{ resolution_rate }}%
+      </div>
+      <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">
+        Resolution Rate
+      </div>
+    </div>
+    <div
+      class="text-center p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition"
+    >
+      <div class="text-4xl font-bold text-purple-500 mb-2">
+        {{ avg_response_time }}
+      </div>
+      <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">
+        Avg. Response Time
+      </div>
+    </div>
+    <div
+      class="text-center p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition"
+    >
+      <div class="text-4xl font-bold text-orange-500 mb-2">
+        {{ active_citizens }}+
+      </div>
+      <div class="text-sm font-medium text-slate-500 uppercase tracking-wide">
+        Active Citizens
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section
+  id="how-it-works"
+  class="bg-white py-24 rounded-3xl shadow-sm border border-slate-100 my-8 mx-4 md:mx-0"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-3xl font-bold text-slate-900 mb-4">How It Works</h2>
+      <p class="text-lg text-slate-500">
+        A simple, transparent process to get things fixed.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+      <div class="flex flex-col items-center">
+        <div
+          class="w-20 h-20 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6"
+        >
+          <i data-lucide="camera" class="w-10 h-10"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-3">1. Snap & Report</h3>
+        <p class="text-slate-500 leading-relaxed">
+          Take a photo of the issue, add a location, and submit it instantly.
+        </p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div
+          class="w-20 h-20 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6"
+        >
+          <i data-lucide="check-circle" class="w-10 h-10"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-3">
+          2. We Verify & Assign
+        </h3>
+        <p class="text-slate-500 leading-relaxed">
+          Our team verifies the report and assigns it to the relevant
+          department.
+        </p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div
+          class="w-20 h-20 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6"
+        >
+          <i data-lucide="sparkles" class="w-10 h-10"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 mb-3">3. Problem Solved</h3>
+        <p class="text-slate-500 leading-relaxed">
+          Track the progress in real-time and get notified once it's fixed.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+  <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+    Ready to make a difference?
+  </h2>
+  <p class="text-xl text-slate-500 mb-10">
+    Join thousands of citizens who are actively improving their neighborhoods.
+  </p>
+  <a
+    href="{% url 'signup' %}"
+    class="inline-block bg-slate-900 text-white px-10 py-5 rounded-xl text-lg font-bold hover:bg-slate-800 transition shadow-xl transform hover:-translate-y-1"
+  >
+    Get Started Now
+  </a>
+</section>
+{% endblock %}

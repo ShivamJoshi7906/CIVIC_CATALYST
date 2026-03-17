@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Manage Issue{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto py-12 px-4">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+    <div>
+      <div class="flex items-center space-x-3 mb-2">
+        <span class="bg-blue-600 text-white text-[10px] font-black uppercase px-3 py-1 rounded-lg">{{ issue.report_id|default:"CIV-PNDG" }}</span>
+        <span class="text-slate-400 font-bold text-sm">/ {{ issue.category }}</span>
+      </div>
+      <h1 class="text-4xl font-black text-slate-900">{{ issue.title }}</h1>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <!-- LEFT SIDE -->
+    <div class="lg:col-span-2 space-y-8">
+      <div class="bg-white rounded-3xl p-8 shadow-xl border">
+        <h3 class="text-xs font-black text-slate-400 uppercase mb-6">Issue Information</h3>
+        <p class="text-slate-600 text-lg mb-8">{{ issue.description }}</p>
+        <div class="grid grid-cols-2 gap-8 py-6 border-t">
+          <div>
+            <span class="text-xs font-bold text-slate-400 block mb-1">Status</span>
+            <span
+              class="px-3 py-1 rounded-full text-xs font-bold {% if issue.status == 'Pending' %}bg-yellow-100 text-yellow-700{% elif issue.status == 'Completed' %}bg-green-100 text-green-700{% elif issue.status == 'Assigned' %}bg-blue-100 text-blue-700{% else %}bg-purple-100 text-purple-700{% endif %}">{{ issue.status }}</span>
+
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 block mb-1">Location</span>
+            <p class="text-slate-800 font-bold">{{ issue.location }}</p>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 block mb-1">Reported By</span>
+            <p class="text-slate-800 font-bold">{{ issue.reported_by.get_full_name|default:issue.reported_by.username }}
+            </p>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 block mb-1">Reported On</span>
+            <p class="text-slate-800 font-bold">{{ issue.created_at|date:"d M Y" }}</p>
+          </div>
+          {% if issue.assigned_to %}
+          <div>
+            <span class="text-xs font-bold text-slate-400 block mb-1">Assigned To</span>
+            <p class="text-slate-800 font-bold">{{ issue.assigned_to.get_full_name|default:issue.assigned_to.username }}
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% if issue.image or issue.completion_proof %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% if issue.image %}
+        <div class="bg-white rounded-3xl p-6 shadow border">
+          <h3 class="text-xs font-bold text-slate-400 mb-3">Original Evidence</h3>
+          <img src="{{ issue.image.url }}" class="rounded-xl w-full" />
+        </div>
+        {% endif %}
+        {% if issue.completion_proof %}
+        <div class="bg-white rounded-3xl p-6 shadow border">
+          <h3 class="text-xs font-bold text-green-600 mb-3">Completion Proof</h3>
+          <img src="{{ issue.completion_proof.url }}" class="rounded-xl w-full" />
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    <!-- RIGHT SIDE PANEL -->
+    <div>
+      <div class="sticky top-24 bg-slate-900 rounded-3xl p-8 shadow-2xl text-white">
+        <h3 class="text-xl font-bold mb-6">Update Status</h3>
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+          {% if user.role == 'Admin' %}
+          <div>
+            <label class="text-xs font-bold block mb-1">Assign Staff</label>
+            <select name="assigned_to" class="w-full bg-white/10 border border-white/20 rounded-xl p-3 text-white" style="color: #fff;">
+              <option value="" style="background:#1e293b; color:#fff;">Unassigned</option>
+              {% for staff_member in staff_members %}
+              <option value="{{ staff_member.id }}" style="background:#1e293b; color:#fff;" {% if issue.assigned_to and issue.assigned_to.username == staff_member.username %}selected{% endif %}>{{ staff_member.get_full_name|default:staff_member.username }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endif %}
+          <div>
+            <label class="text-xs font-bold block mb-1">Status</label>
+            <select name="status" id="statusSelect"
+              class="w-full bg-white/10 border border-white/20 rounded-xl p-3 text-white" style="color: #fff;">
+              {% if user.role == 'Admin' %}
+              <option value="Pending" style="background:#1e293b; color:#fff;" {% if issue.status == 'Pending' %}selected{% endif %}>Pending</option>
+              {% endif %}
+              <option value="Assigned" style="background:#1e293b; color:#fff;" {% if issue.status == 'Assigned' %}selected{% endif %}>Assigned</option>
+              <option value="In Progress" style="background:#1e293b; color:#fff;" {% if issue.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+              <option value="Completed" style="background:#1e293b; color:#fff;" {% if issue.status == 'Completed' %}selected{% endif %}>Completed</option>
+            </select>
+          </div>
+          {% if user.role == 'Staff' or user.role == 'Admin' %}
+          <div id="proofDiv" {% if issue.status != 'Completed' %}style="display:none" {% endif %}>
+            <label class="text-xs font-bold text-green-400 block mb-1">Upload Completion Proof <span class="text-red-400">*</span></label>
+
+            <input type="file" name="completion_proof" accept="image/*" class="w-full text-sm text-slate-300" />
+          </div>
+          {% endif %}
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Save
+            Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const statusSelect = document.getElementById("statusSelect");
+  const proofDiv = document.getElementById("proofDiv");
+  const proofInput = proofDiv ? proofDiv.querySelector('input[type="file"]') : null;
+  const form = document.querySelector('form');
+
+  function toggleProof() {
+    if (!proofDiv) return;
+    const isCompleted = statusSelect.value === "Completed";
+    proofDiv.style.display = isCompleted ? "block" : "none";
+  }
+
+  if (statusSelect) {
+    statusSelect.addEventListener("change", toggleProof);
+    toggleProof();
+  }
+
+  const originalStatus = '{{ issue.status }}';
+  const hasExistingProof = '{{ issue.completion_proof|yesno:"yes,no" }}' === 'yes';
+
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      if (statusSelect && statusSelect.value === "Completed") {
+        const isNewTransition = originalStatus !== 'Completed';
+        if (isNewTransition && proofInput && !proofInput.files.length) {
+          e.preventDefault();
+          alert('Please upload completion proof before marking as Completed.');
+          proofDiv.style.display = 'block';
+        }
+      }
+    });
+  }
+</script>
+{% endblock %}
