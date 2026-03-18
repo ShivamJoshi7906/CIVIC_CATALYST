@@ -107,6 +107,11 @@ if MONGODB_URI:
             'NAME': 'civic_db',
             'CLIENT': {
                 'host': MONGODB_URI,
+                'serverSelectionTimeoutMS': 5000,
+                'connectTimeoutMS': 5000,
+                'socketTimeoutMS': 5000,
+                'retryWrites': True,
+                'w': 'majority',
             }
         }
     }
