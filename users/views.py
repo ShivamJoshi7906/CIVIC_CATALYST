@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm, AdminUserCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from issues.models import Issue
 
 def signup_view(request):
     if request.method == 'POST':
@@ -19,7 +20,8 @@ def signup_view(request):
             messages.error(request, "Registration failed. Please check the errors below.")
     else:
         form = CustomUserCreationForm()
-    return render(request, 'users/signup.html', {'form': form})
+    resolved_count = Issue.objects.filter(status='Completed').count()
+    return render(request, 'users/signup.html', {'form': form, 'resolved_count': resolved_count})
 
 def login_view(request):
     if request.method == 'POST':

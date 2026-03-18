@@ -5,6 +5,9 @@ from django.contrib.auth import get_user_model
 from django.db.models import Avg, F, ExpressionWrapper, DurationField
 from django.utils import timezone
 from django.contrib import messages
+import urllib.request
+import urllib.parse
+import json
 
 User = get_user_model()
 
@@ -154,12 +157,32 @@ def report_issue_view(request):
         location = request.POST.get('location')
         image = request.FILES.get('image')
         
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+        lat_val = float(latitude) if latitude else None
+        lon_val = float(longitude) if longitude else None
+        
+        # Geocode if location string is provided but no lat/lon
+        if not lat_val and location and not location.startswith('Lat:'):
+            try:
+                url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + urllib.parse.quote(location)
+                req = urllib.request.Request(url, headers={'User-Agent': 'CivicCatalystApp'})
+                with urllib.request.urlopen(req) as response:
+                    data = json.loads(response.read().decode())
+                    if data:
+                        lat_val = float(data[0]['lat'])
+                        lon_val = float(data[0]['lon'])
+            except Exception:
+                pass
+        
         if title and description and category and location:
             Issue.objects.create(
                 title=title,
                 description=description,
                 category=category,
                 location=location,
+                latitude=lat_val,
+                longitude=lon_val,
                 image=image,
                 reported_by=request.user
             )

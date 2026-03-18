@@ -70,6 +70,8 @@
                     <input type="text" id="location" name="location"
                         class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-800 font-bold text-sm placeholder:text-slate-300 placeholder:font-normal focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition"
                         placeholder="Enter address or use GPS location">
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
                     <button type="button" onclick="getLocation()"
                         class="bg-blue-600 text-white px-5 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100 flex items-center gap-2">
                         <i data-lucide="map-pin" class="w-4 h-4"></i>
@@ -158,6 +160,8 @@
 
     function showPosition(position) {
         document.getElementById("location").value = "Lat: " + position.coords.latitude + ", Long: " + position.coords.longitude;
+        document.getElementById("latitude").value = position.coords.latitude;
+        document.getElementById("longitude").value = position.coords.longitude;
     }
 
     // Image Preview Logic

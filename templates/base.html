@@ -38,6 +38,34 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
+
+      /* Hide Google Translate banner/toolbar completely */
+      .goog-te-banner-frame {
+        display: none !important;
+      }
+      body > .skiptranslate {
+        display: none !important;
+      }
+      body {
+        top: 0 !important;
+      }
+      #google_translate_element .goog-te-gadget {
+        font-size: 0 !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
+      }
+      .goog-te-gadget-icon {
+        display: none !important;
+      }
+      #goog-gt-tt,
+      .goog-te-balloon-frame {
+        display: none !important;
+      }
+      .goog-text-highlight {
+        background: none !important;
+        box-shadow: none !important;
+      }
     </style>
   </head>
 
@@ -325,8 +353,8 @@
       </div>
     </footer>
 
-    <!-- Hidden Google Widget -->
-    <div id="google_translate_element" style="display: none !important"></div>
+    <!-- Hidden Google Widget - must be in DOM for Google Translate to work -->
+    <div id="google_translate_element" style="width: 0; height: 0; overflow: hidden; position: absolute; top: -9999px; left: -9999px;"></div>
 
     <script>
       lucide.createIcons();
@@ -347,7 +375,7 @@
         lastScrollTop = scrollTop;
       });
 
-      // Translate Logic
+      // Translate Popup Logic
       const translateBtn = document.getElementById("translate-btn");
       const translatePopup = document.getElementById("translate-popup");
 
@@ -371,6 +399,7 @@
         }
       });
 
+      // Google Translate Init
       function googleTranslateElementInit() {
         new google.translate.TranslateElement(
           {
@@ -383,19 +412,37 @@
         );
       }
 
+      // Cookie-based translate function (more reliable)
       function translateSite(langCode) {
+        // Close popup first
+        if (translatePopup) {
+          translatePopup.classList.add("invisible");
+          translatePopup.classList.add("opacity-0");
+          translatePopup.classList.add("translate-y-2");
+        }
+
+        if (langCode === 'en') {
+          // Reset to English: clear the googtrans cookie
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.localhost";
+          location.reload();
+          return;
+        }
+
+        // Set the googtrans cookie for the target language
+        var value = "/en/" + langCode;
+        document.cookie = "googtrans=" + value + "; path=/;";
+        document.cookie = "googtrans=" + value + "; path=/; domain=" + window.location.hostname;
+
+        // Try the combo box first (instant, no reload)
         const select = document.querySelector("select.goog-te-combo");
         if (select) {
           select.value = langCode;
           select.dispatchEvent(new Event("change"));
         } else {
-          console.warn("Google Translate combo not found, retrying...");
-          setTimeout(() => translateSite(langCode), 1000);
-        }
-        // Close popup
-        if (translatePopup) {
-          translatePopup.classList.add("invisible");
-          translatePopup.classList.add("opacity-0");
+          // Fallback: reload the page with the cookie set
+          location.reload();
         }
       }
     </script>
@@ -405,3 +452,4 @@
     ></script>
   </body>
 </html>
+

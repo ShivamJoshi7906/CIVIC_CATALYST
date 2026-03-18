@@ -47,8 +47,7 @@
                     <h3
                         class="text-xl font-black text-slate-900 mb-3 group-hover:text-blue-600 transition tracking-tight">
                         {{ issue.title|truncatechars:40 }}</h3>
-                    <p class="text-slate-500 text-sm mb-6 line-clamp-3 leading-relaxed font-medium italic">"{{
-                        issue.description|truncatechars:100 }}"</p>
+                    <p class="text-slate-500 text-sm mb-6 line-clamp-3 leading-relaxed font-medium italic">"{{ issue.description|truncatechars:100 }}"</p>
                 </div>
 
                 <div class="pt-6 border-t border-slate-50 space-y-4">
@@ -70,8 +69,7 @@
                                 {{ issue.reported_by.username|slice:":1" }}
                             </div>
                             <span class="text-[10px] font-black text-slate-900 tracking-wider">
-                                {{ issue.reported_by.get_full_name|default:issue.reported_by.username|truncatechars:15
-                                }}
+                                {{ issue.reported_by.get_full_name|default:issue.reported_by.username|truncatechars:15 }}
                             </span>
                         </div>
                         <a href="{% url 'update_issue_status' issue.id %}"
