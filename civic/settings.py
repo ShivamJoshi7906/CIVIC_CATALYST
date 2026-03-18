@@ -44,15 +44,18 @@ INSTALLED_APPS = [
     'civic',
     'tailwind',
     'theme',
-    'django_browser_reload',
     'users',
     'issues',
     'cloudinary_storage',
     'cloudinary',
 ]
 
+# Dev-only: browser reload
+if DEBUG:
+    INSTALLED_APPS.append('django_browser_reload')
+
 TAILWIND_APP_NAME = 'theme'
-INTERNAL_IPS = ['127.0.01']
+INTERNAL_IPS = ['127.0.0.1']
 
 NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
 
@@ -65,8 +68,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
+# Dev-only: browser reload middleware
+if DEBUG:
+    MIDDLEWARE.append('django_browser_reload.middleware.BrowserReloadMiddleware')
 
 ROOT_URLCONF = 'civic.urls'
 

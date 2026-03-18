@@ -7,5 +7,8 @@ urlpatterns = [
     path('auth/', include('users.urls')),
     path('', include('issues.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
-    path("__reload__/", include("django_browser_reload.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Dev-only: browser reload URL
+if settings.DEBUG:
+    urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
