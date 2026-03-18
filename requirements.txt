@@ -5,7 +5,7 @@ cloudinary==1.44.1
 Django==6.0.2
 django-browser-reload==1.19.0
 django-cloudinary-storage==0.3.0
-django-mongodb-backend==5.2.0b0
+django-mongodb-backend==6.0.2
 django-tailwind==4.4.2
 dnspython==2.8.0
 gunicorn==25.1.0
