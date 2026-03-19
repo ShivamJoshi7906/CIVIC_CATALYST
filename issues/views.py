@@ -205,6 +205,11 @@ def issues_json_view(request):
     issues = Issue.objects.all()
     data = []
     for issue in issues:
+        try:
+            reported_by_name = issue.reported_by.get_full_name() or issue.reported_by.email
+        except Exception:
+            reported_by_name = "Anonymous Citizen"
+            
         data.append({
             'id': str(issue.id),
             'title': issue.title,
@@ -215,7 +220,7 @@ def issues_json_view(request):
             'latitude': str(issue.latitude) if issue.latitude else None,
             'longitude': str(issue.longitude) if issue.longitude else None,
             'report_id': issue.report_id,
-            'reported_by': issue.reported_by.get_full_name() or issue.reported_by.email
+            'reported_by': reported_by_name
         })
     return JsonResponse(data, safe=False)
 
