@@ -202,31 +202,27 @@ def map_view(request):
 
 def issues_json_view(request):
     from django.http import JsonResponse
-    import traceback
-    try:
-        issues = Issue.objects.all()
-        data = []
-        for issue in issues:
-            try:
-                reported_by_name = issue.reported_by.get_full_name() or issue.reported_by.email
-            except Exception:
-                reported_by_name = "Anonymous Citizen"
-                
-            data.append({
-                'id': str(issue.id),
-                'title': issue.title,
-                'location': issue.location,
-                'status': issue.status,
-                'category': issue.category,
-                'description': issue.description,
-                'latitude': str(issue.latitude) if issue.latitude else None,
-                'longitude': str(issue.longitude) if issue.longitude else None,
-                'report_id': issue.report_id,
-                'reported_by': reported_by_name
-            })
-        return JsonResponse(data, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e), 'traceback': traceback.format_exc()}, status=500)
+    issues = Issue.objects.all()
+    data = []
+    for issue in issues:
+        try:
+            reported_by_name = issue.reported_by.get_full_name() or issue.reported_by.email
+        except Exception:
+            reported_by_name = "Anonymous Citizen"
+            
+        data.append({
+            'id': str(issue.id),
+            'title': issue.title,
+            'location': issue.location,
+            'status': issue.status,
+            'category': issue.category,
+            'description': issue.description,
+            'latitude': str(issue.latitude) if issue.latitude else None,
+            'longitude': str(issue.longitude) if issue.longitude else None,
+            'report_id': issue.report_id,
+            'reported_by': reported_by_name
+        })
+    return JsonResponse(data, safe=False)
 
 def about_us_view(request):
     resolved = Issue.objects.filter(status='Completed').count()
