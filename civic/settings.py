@@ -100,19 +100,12 @@ WSGI_APPLICATION = 'civic.wsgi.application'
 MONGODB_URI = os.environ.get('MONGODB_URI')
 
 if MONGODB_URI:
-    # Production: MongoDB Atlas
+    # Production: MongoDB Atlas (official django-mongodb-backend format)
     DATABASES = {
         'default': {
             'ENGINE': 'django_mongodb_backend',
+            'HOST': MONGODB_URI,
             'NAME': 'civic_db',
-            'CLIENT': {
-                'host': MONGODB_URI,
-                'serverSelectionTimeoutMS': 5000,
-                'connectTimeoutMS': 5000,
-                'socketTimeoutMS': 5000,
-                'retryWrites': True,
-                'w': 'majority',
-            }
         }
     }
 else:
