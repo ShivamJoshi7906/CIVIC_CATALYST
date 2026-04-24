@@ -4,7 +4,7 @@
 
 Civic Catalyst is a premium web application built to streamline the reporting, tracking, and resolution of civic issues. It offers a modern, responsive, and dynamic user interface with powerful role-based features.
 
-🚀 **Live Demo:** [Insert your Render Live Link Here]
+🚀 **Live Demo:** https://civic-catalyst.onrender.com
 
 ## Features
 - **Issue Reporting**: Users can report civic issues with image uploads and built-in voice-to-text form support.
@@ -25,7 +25,7 @@ Civic Catalyst is a premium web application built to streamline the reporting, t
 
 The application is fully deployed and can be tested directly without any local installation! 
 
-1. **Visit the live site:** **[Replace with your Render live website link]**
+1. **Visit the live site:** https://civic-catalyst.onrender.com
 2. **Login to the Admin Dashboard** to view all issues, update statuses, or manage community members using the credentials below:
 
 ### Testing Credentials
